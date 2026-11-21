@@ -50,19 +50,20 @@ export const HeroLayer: React.FC<HeroLayerProps> = ({
       245 * scaleFactor +
       0.06 * viewportHeight;
 
-    // 15% reduced headline cap compared to English 104px -> 88px for Mongolian Cyrillic
-    let fontSize = Math.min(88, 61 * scaleFactor);
+    let fontSize = Math.min(104, 72 * scaleFactor);
     heading.style.fontSize = `${fontSize}px`;
 
     const measuredWidth = lineInner.getBoundingClientRect().width;
     const maxAllowedWidth = viewportWidth * 0.86;
     if (measuredWidth > maxAllowedWidth && measuredWidth > 0) {
       fontSize = fontSize * (maxAllowedWidth / measuredWidth);
-      heading.style.fontSize = `${Math.max(32, fontSize)}px`;
+      heading.style.fontSize = `${fontSize}px`;
     }
 
     const blockHeight = heroCopy.getBoundingClientRect().height;
-    const computedTop = Math.max(82, fernTop + 0.5 * fontSize - blockHeight);
+    const navEl = document.querySelector<HTMLElement>(".moss-nav");
+    const minTop = (navEl ? navEl.getBoundingClientRect().bottom : 66) + 12;
+    const computedTop = Math.max(minTop, fernTop + 0.5 * fontSize - blockHeight);
     heroCopy.style.top = `${computedTop}px`;
   }, [heroCopyRef]);
 
@@ -79,8 +80,8 @@ export const HeroLayer: React.FC<HeroLayerProps> = ({
     <>
       <div className="layer" ref={l0Ref}>
         <div className="hero-copy" ref={heroCopyRef}>
-          <LimeTag text={SITE_CONTENT.hero.chip} />
-          <h1 ref={headingRef}>
+          <LimeTag text={SITE_CONTENT.hero.chip} lang="en" />
+          <h1 ref={headingRef} lang="en">
             <span className="hero-line">
               <span className="hero-line-inner" ref={lineInnerRef}>
                 {SITE_CONTENT.hero.headline}

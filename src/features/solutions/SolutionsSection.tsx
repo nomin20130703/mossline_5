@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { LimeTag } from "../../components/LimeTag";
-import { SITE_CONTENT, StatItem } from "../../content/siteContent";
+import { SITE_CONTENT, STORY_BEATS, StatItem } from "../../content/siteContent";
+import { trackEvent } from "../../services/analytics";
 import { easeCubicInOut } from "../story/scrollMath";
 
 interface SolutionsSectionProps {
+  firedBeatsRef: React.MutableRefObject<Set<string>>;
   onSelectSolution: (topicTitle: string) => void;
 }
 
@@ -20,6 +22,7 @@ function formatStatValue(stat: StatItem, progress: number): string {
 }
 
 export const SolutionsSection: React.FC<SolutionsSectionProps> = ({
+  firedBeatsRef,
   onSelectSolution,
 }) => {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -35,6 +38,15 @@ export const SolutionsSection: React.FC<SolutionsSectionProps> = ({
         return;
       }
       hasAnimatedStatsRef.current = true;
+
+      if (!firedBeatsRef.current.has(STORY_BEATS.solutions.name)) {
+        firedBeatsRef.current.add(STORY_BEATS.solutions.name);
+        trackEvent("story_beat", {
+          beat_name: STORY_BEATS.solutions.name,
+          beat_index: STORY_BEATS.solutions.index,
+        });
+      }
+
       const startTime = performance.now();
       const duration = 1600;
 
@@ -66,7 +78,7 @@ export const SolutionsSection: React.FC<SolutionsSectionProps> = ({
       window.removeEventListener("scroll", checkPosition);
       window.cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [firedBeatsRef]);
 
   const handleCardPointerMove = (
     index: number,
@@ -117,7 +129,10 @@ export const SolutionsSection: React.FC<SolutionsSectionProps> = ({
               }}
               onPointerMove={(event) => handleCardPointerMove(index, event)}
               onPointerLeave={() => handleCardPointerLeave(index)}
-              onClick={() => onSelectSolution(fullTitle)}
+              onClick={() => {
+                trackEvent("solution_card_click", { card: card.analyticsKey });
+                onSelectSolution(fullTitle);
+              }}
             >
               <div
                 className="sol-card-bg"

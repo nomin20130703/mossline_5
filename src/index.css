@@ -397,21 +397,20 @@ a {
 }
 
 .hero-copy h1 {
-  margin: 16px auto 0;
+  margin: 18px auto 0;
+  font-family: "Inter Tight", var(--sans);
   font-weight: 500;
-  font-size: clamp(36px, 5.1vw, 82px);
-  line-height: 1.15;
-  letter-spacing: 0;
+  font-size: clamp(44px, 6vw, 96px);
+  line-height: 0.92;
+  letter-spacing: -0.045em;
   color: var(--ink);
-  max-width: 92vw;
-  overflow-wrap: break-word;
-  text-wrap: balance;
 }
 
 .hero-line {
   display: block;
   overflow: hidden;
-  padding-bottom: 0.08em;
+  padding-bottom: 0.06em;
+  white-space: nowrap;
 }
 
 .hero-line-inner {
@@ -1117,8 +1116,12 @@ a {
   }
 
   .hero-copy h1 {
-    font-size: clamp(30px, 6.4vw, 52px);
-    line-height: 1.18;
+    font-size: clamp(44px, 6vw, 96px);
+    line-height: 0.92;
+  }
+
+  .hero-line {
+    white-space: normal;
   }
 
   .hero-hud {

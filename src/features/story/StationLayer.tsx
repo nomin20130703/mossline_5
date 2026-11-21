@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { LimeTag } from "../../components/LimeTag";
 import { SITE_CONTENT } from "../../content/siteContent";
+import { trackEvent } from "../../services/analytics";
 
 interface StationLayerProps {
   layerRef: React.RefObject<HTMLDivElement | null>;
@@ -104,11 +105,14 @@ export const StationLayer: React.FC<StationLayerProps> = ({
               type="button"
               className={`feat-row ${isActive ? "on" : ""}`}
               aria-pressed={isActive}
-              onClick={() =>
+              onClick={() => {
+                trackEvent("feature_row_click", {
+                  row: feature.analyticsKey,
+                });
                 setActiveFeatureId((current) =>
                   current === feature.id ? null : feature.id
-                )
-              }
+                );
+              }}
               ref={(element) => {
                 featureRowRefs.current[index] = element;
               }}

@@ -1,5 +1,6 @@
 export interface NavLinkItem {
   id: string;
+  analyticsKey: "solutions" | "our_tech" | "company" | "resources";
   label: string;
   targetSectionId?: string;
   targetProgress?: number;
@@ -7,6 +8,11 @@ export interface NavLinkItem {
 
 export interface HotspotItem {
   id: string;
+  analyticsKey:
+    | "soil_carbon"
+    | "canopy_moisture"
+    | "species_index"
+    | "microclimate";
   left: string;
   top: string;
   label: string;
@@ -15,6 +21,12 @@ export interface HotspotItem {
 
 export interface FeatureRowItem {
   id: string;
+  analyticsKey:
+    | "observation_system"
+    | "atmospheric_monitoring"
+    | "algorithmic_processing"
+    | "blockchain_traceability"
+    | "built_for_scale";
   index: string;
   label: string;
   detail: string;
@@ -22,6 +34,10 @@ export interface FeatureRowItem {
 
 export interface SolutionCardItem {
   id: string;
+  analyticsKey:
+    | "forest_peatland"
+    | "scope3_sourcing"
+    | "biodiversity_credits";
   bracket: string;
   titleLines: string[];
   body: string;
@@ -38,6 +54,19 @@ export interface StatItem {
   suffix: string;
   label: string;
 }
+
+export interface StoryBeatDefinition {
+  name: "hero" | "vision" | "accounting" | "field_station" | "solutions";
+  index: 0 | 1 | 2 | 3 | 4;
+}
+
+export const STORY_BEATS = {
+  hero: { name: "hero", index: 0 },
+  vision: { name: "vision", index: 1 },
+  accounting: { name: "accounting", index: 2 },
+  fieldStation: { name: "field_station", index: 3 },
+  solutions: { name: "solutions", index: 4 },
+} as const satisfies Record<string, StoryBeatDefinition>;
 
 export const MEDIA_ASSETS = {
   flyInVideoUrl:
@@ -57,10 +86,30 @@ export const MEDIA_ASSETS = {
 export const SITE_CONTENT = {
   brandName: "Mossline",
   navLinks: [
-    { id: "solutions", label: "Шийдлүүд", targetSectionId: "sol" },
-    { id: "tech", label: "Манай технологи", targetProgress: 0.8 },
-    { id: "company", label: "Алсын хараа", targetProgress: 0.24 },
-    { id: "resources", label: "Бүртгэл", targetProgress: 0.52 },
+    {
+      id: "solutions",
+      analyticsKey: "solutions",
+      label: "Шийдлүүд",
+      targetSectionId: "sol",
+    },
+    {
+      id: "tech",
+      analyticsKey: "our_tech",
+      label: "Манай технологи",
+      targetProgress: 0.8,
+    },
+    {
+      id: "company",
+      analyticsKey: "company",
+      label: "Алсын хараа",
+      targetProgress: 0.24,
+    },
+    {
+      id: "resources",
+      analyticsKey: "resources",
+      label: "Бүртгэл",
+      targetProgress: 0.52,
+    },
   ] as NavLinkItem[],
   navCtaLabel: "Холбогдох",
   navCtaSymbol: "›",
@@ -68,8 +117,8 @@ export const SITE_CONTENT = {
   menuCloseAriaLabel: "Цэс хаах",
 
   hero: {
-    chip: "Гаригийн оюун ухаан",
-    headline: "Амьд гаригийг хэмжихүй",
+    chip: "Planetary intelligence",
+    headline: "Measure the living planet",
     stillAlt: "Хөвд болон оймоор бүрхэгдсэн хөвөгч хадан арал",
     cutoutAlt: "Тэргүүн хэсгийн ойм болон хөвдтэй арал",
     rockAlt: "Хөвдтэй хөвөгч чулуу",
@@ -106,6 +155,7 @@ export const SITE_CONTENT = {
     hotspots: [
       {
         id: "soil-carbon",
+        analyticsKey: "soil_carbon",
         left: "12%",
         top: "58%",
         label: "Хөрсний нүүрстөрөгч",
@@ -113,6 +163,7 @@ export const SITE_CONTENT = {
       },
       {
         id: "canopy-moisture",
+        analyticsKey: "canopy_moisture",
         left: "33%",
         top: "41%",
         label: "Титмийн чийгшил",
@@ -120,6 +171,7 @@ export const SITE_CONTENT = {
       },
       {
         id: "species-index",
+        analyticsKey: "species_index",
         left: "70%",
         top: "66%",
         label: "Зүйлийн индекс",
@@ -127,6 +179,7 @@ export const SITE_CONTENT = {
       },
       {
         id: "microclimate",
+        analyticsKey: "microclimate",
         left: "83%",
         top: "47%",
         label: "Бичил уур амьсгал",
@@ -149,30 +202,35 @@ export const SITE_CONTENT = {
     features: [
       {
         id: "01",
+        analyticsKey: "observation_system",
         index: "01",
         label: "Алтан стандартын ажиглалтын систем",
         detail: "Хөрс, чийгшил болон нарны цацрагийг 15 минутын давтамжтай бүртгэнэ.",
       },
       {
         id: "02",
+        analyticsKey: "atmospheric_monitoring",
         index: "02",
         label: "Дэлхийн түвшний агаар мандлын хяналт (AMRV)",
         detail: "Эргүүлгийн ковариацын цамхгаар хийн урсгалыг тасралтгүй хэмжинэ.",
       },
       {
         id: "03",
+        analyticsKey: "algorithmic_processing",
         index: "03",
         label: "Нэгдсэн алгоритмын боловсруулалт",
         detail: "Хээрийн болон хиймэл дагуулын өгөгдлийг автоматаар цэвэрлэн шалгана.",
       },
       {
         id: "04",
+        analyticsKey: "blockchain_traceability",
         index: "04",
         label: "Блокчэйнээр баталгаажсан мөрдөх чадвар",
         detail: "Хэмжилт бүрийн гарал үүслийг өөрчлөгдөхгүй бүртгэлээр баталгаажуулна.",
       },
       {
         id: "05",
+        analyticsKey: "built_for_scale",
         index: "05",
         label: "Том хэмжээ, нарийн бүтцэд зориулав",
         detail: "Олон улсын нийлүүлэлтийн сүлжээ болон өргөн уудам ойд нийцнэ.",
@@ -188,6 +246,7 @@ export const SITE_CONTENT = {
     cards: [
       {
         id: "nature-based",
+        analyticsKey: "forest_peatland",
         bracket: "[Байгальд суурилсан шийдэл]",
         titleLines: ["Ой ба хүлэрт намгийн", "нүүрстөрөгчийн төсөл"],
         body: "Тасралтгүй урсгалын хэмжилт нь түүврийн тооцоог орлож, нүүрстөрөгчийн кредит нь газрын бодит шингээлтийг тусгана.",
@@ -197,6 +256,7 @@ export const SITE_CONTENT = {
       },
       {
         id: "supply-chain",
+        analyticsKey: "scope3_sourcing",
         bracket: "[Нийлүүлэлтийн сүлжээний шийдэл]",
         titleLines: ["Хамрах хүрээ 3 эх үүсвэрийн", "баталгаажуулалт"],
         body: "Түүхий эдийг ургуулсан талбайтай нь холбон мөрдөж, тээвэрлэлт бүрд ой устгалаас ангид нотолгоог хавсаргана.",
@@ -206,6 +266,7 @@ export const SITE_CONTENT = {
       },
       {
         id: "biodiversity",
+        analyticsKey: "biodiversity_credits",
         bracket: "[Биологийн олон янз байдлын кредит]",
         titleLines: ["Амьд зүйлийн", "суурь үзүүлэлт"],
         body: "Акустик болон eDNA хяналт нь жил бүр харьцуулан тайлагнах боломжтой биологийн олон янз байдлын суурь үзүүлэлтийг бүрдүүлнэ.",

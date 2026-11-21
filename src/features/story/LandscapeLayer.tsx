@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { SITE_CONTENT } from "../../content/siteContent";
+import { HotspotItem, SITE_CONTENT } from "../../content/siteContent";
+import { trackEvent } from "../../services/analytics";
 
 interface LandscapeLayerProps {
   layerRef: React.RefObject<HTMLDivElement | null>;
@@ -15,8 +16,12 @@ export const LandscapeLayer: React.FC<LandscapeLayerProps> = ({
   const [activeHotspotId, setActiveHotspotId] = useState<string | null>(null);
   const words = SITE_CONTENT.landscape.accountingText.split(" ");
 
-  const handleHotspotToggle = (id: string) => {
-    setActiveHotspotId((current) => (current === id ? null : id));
+  const handleHotspotToggle = (hotspot: HotspotItem) => {
+    const isOpening = activeHotspotId !== hotspot.id;
+    if (isOpening) {
+      trackEvent("hotspot_click", { hotspot: hotspot.analyticsKey });
+    }
+    setActiveHotspotId(isOpening ? hotspot.id : null);
   };
 
   return (
@@ -52,7 +57,7 @@ export const LandscapeLayer: React.FC<LandscapeLayerProps> = ({
               top: hotspot.top,
             }}
             aria-pressed={isActive}
-            onClick={() => handleHotspotToggle(hotspot.id)}
+            onClick={() => handleHotspotToggle(hotspot)}
             ref={(element) => {
               hotspotRefs.current[index] = element;
             }}

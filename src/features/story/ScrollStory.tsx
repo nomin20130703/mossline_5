@@ -1,5 +1,11 @@
 import React, { useEffect, useRef } from "react";
-import { MEDIA_ASSETS, SITE_CONTENT } from "../../content/siteContent";
+import {
+  MEDIA_ASSETS,
+  SITE_CONTENT,
+  STORY_BEATS,
+  StoryBeatDefinition,
+} from "../../content/siteContent";
+import { trackEvent } from "../../services/analytics";
 import { HeroLayer } from "./HeroLayer";
 import { LandscapeLayer } from "./LandscapeLayer";
 import { clamp, easeCubicInOut, seg } from "./scrollMath";
@@ -9,9 +15,13 @@ import { VisionLayer } from "./VisionLayer";
 
 interface ScrollStoryProps {
   storyRef: React.RefObject<HTMLElement | null>;
+  firedBeatsRef: React.MutableRefObject<Set<string>>;
 }
 
-export const ScrollStory: React.FC<ScrollStoryProps> = ({ storyRef }) => {
+export const ScrollStory: React.FC<ScrollStoryProps> = ({
+  storyRef,
+  firedBeatsRef,
+}) => {
   const camRef = useRef<HTMLDivElement | null>(null);
   const camFRef = useRef<HTMLDivElement | null>(null);
   const plateRef = useRef<HTMLImageElement | null>(null);
@@ -87,6 +97,19 @@ export const ScrollStory: React.FC<ScrollStoryProps> = ({ storyRef }) => {
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     window.addEventListener("resize", handleResize);
 
+    const fireBeatOnce = (beat: StoryBeatDefinition) => {
+      if (firedBeatsRef.current.has(beat.name)) {
+        return;
+      }
+      firedBeatsRef.current.add(beat.name);
+      trackEvent("story_beat", {
+        beat_name: beat.name,
+        beat_index: beat.index,
+      });
+    };
+
+    fireBeatOnce(STORY_BEATS.hero);
+
     const tick = (now: number) => {
       const dt = Math.min(64, Math.max(1, now - lastTime));
       lastTime = now;
@@ -100,6 +123,16 @@ export const ScrollStory: React.FC<ScrollStoryProps> = ({ storyRef }) => {
         sp += (rawProgress - sp) * (1 - Math.pow(0.86, dt / 16.7));
         if (Math.abs(rawProgress - sp) < 0.0002) {
           sp = rawProgress;
+        }
+
+        if (sp >= 0.16) {
+          fireBeatOnce(STORY_BEATS.vision);
+        }
+        if (sp >= 0.45) {
+          fireBeatOnce(STORY_BEATS.accounting);
+        }
+        if (sp >= 0.72) {
+          fireBeatOnce(STORY_BEATS.fieldStation);
         }
 
         sx += (mx - sx) * 0.06;
@@ -335,7 +368,7 @@ export const ScrollStory: React.FC<ScrollStoryProps> = ({ storyRef }) => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("resize", handleResize);
     };
-  }, [getShownFrameIndex, resizeCanvas, setWantedProgress, storyRef]);
+  }, [firedBeatsRef, getShownFrameIndex, resizeCanvas, setWantedProgress, storyRef]);
 
   return (
     <section id="story" ref={storyRef}>
